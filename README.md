@@ -11,8 +11,9 @@
 
 | 김형주 | 신준희 | 이현대 | 이현민 |
 |:-----:|:-----:|:-----:|:-----:|
-| <img src="https://i.namu.wiki/i/j0S1ukGRi1C_AAeQDIHrt30cuQDVYwruBJRWpekny99aQKzDbX1PSmS51efVPDepp_e1oAuLdH_8QvDqSrX7uAnfQOZyHyLW1GFi_XnWEwMWKzpXFBikJ3qTXV6Q2qVb7pEgO0HiiWtjuYKpk-kZNA.webp" width="100"/> | <img src="https://i.namu.wiki/i/NWbxBpJRCVvReBHcxM_bQOxTAmPBkas_l4jeIkfzGdyWglEXS92QXOqzN17RGMBMweMKmtf7tD4VOkv_pmKlX5mE0l3AomEHKyfdeHOq7TAqfFho31hMxxhG2_GMKkhxG3yncu3NkfVbZQVfmXWG9Q.webp" width="100"/> | <img src="https://i.namu.wiki/i/rlaXL6whktZVwfLOV0pPQnbHEKCaFI9wfeVpD-mTYf0K5t-G09AQOOO7UPpZMWV_2l3ePEOIDVqA4rXLPHKxdDa-SPHOnk4dyW1JF3r6FyZq-KE-YJxQYLMrCCeENqocCrA7PK6GX3KZIoC-Daq8Hg.webp" width="100"/> | <img src="https://i.namu.wiki/i/mAdeCVXZSBD17XnMVl315reuLuA92ywvT9zIUV2XCnGtfFQz3KJy4dBGnv7y0NZDxfi7PJw4LApnXot6UWgewgi2CADirduSlRAdrJhnY4NSV7wYKOC8qV76M4No3Rcb10FYisJC8AC8p6ttAGeeDw.webp" width="100"/> |
+| <img src="./img/해핑.png" width="100"/> | <img src="./img/주네핑.png" width="100"/> | <img src="./img/똑똑핑.png" width="100"/> | <img src="./img/나그네핑.png" width="100"/> |
 | [@형주핑](https://github.com/Kim-Hyeong-Ju) | [@준희핑](https://github.com/hybukimo) | [@현대핑](https://github.com/kicet3) | [@현민핑](https://github.com/hyunmin6109) |
+
 <br><br>
 
 ## 프로젝트 개요
@@ -55,7 +56,7 @@
 
 
 ## 시스템 아키텍쳐
-<img src="./img/시스템 아키텍처.png" width="100%"/>
+<img src="./images/시스템 아키텍처.png" width="100%"/>
 <br><br><br>
 
 ## 📜요구사항 명세서
