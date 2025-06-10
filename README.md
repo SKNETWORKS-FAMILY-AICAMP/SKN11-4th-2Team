@@ -11,7 +11,7 @@
 
 | 김형주 | 신준희 | 이현대 | 이현민 |
 |:-----:|:-----:|:-----:|:-----:|
-| <img src="./img/해핑.png" width="100"/> | <img src="./img/주네핑.png" width="100"/> | <img src="./img/똑똑핑.png" width="100"/> | <img src="./img/나그네핑.png" width="100"/> |
+| <img src="./images/해핑.png" width="100"/> | <img src="./images/주네핑.png" width="100"/> | <img src="./images/똑똑핑.png" width="100"/> | <img src="./images/나그네핑.png" width="100"/> |
 | [@형주핑](https://github.com/Kim-Hyeong-Ju) | [@준희핑](https://github.com/hybukimo) | [@현대핑](https://github.com/kicet3) | [@현민핑](https://github.com/hyunmin6109) |
 
 <br><br>
