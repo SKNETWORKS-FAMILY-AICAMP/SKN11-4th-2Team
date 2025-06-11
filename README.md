@@ -91,11 +91,12 @@
 
 
 ## 화면 설계서
+<img src="./images/화면설계서_메인페이지.png" width="100%"/>
 <img src="./images/화면설계서_로그인.png" width="100%"/>
 <img src="./images/화면설계서_회원가입.png" width="100%"/>
-<img src="./images/화면설계서_메인페이지.png" width="100%"/>
 <img src="./images/화면설계서_커뮤니티.png" width="100%"/>
 <img src="./images/화면설계서_AI전문가상담.png" width="100%"/>
+<img src="./images/화면설계서_육아자료실.png" width="100%"/>
 
 
 
