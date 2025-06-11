@@ -56,7 +56,7 @@
 
 
 ## 시스템 아키텍쳐
-<img src="./images/시스템 아키텍처.png" width="100%"/>
+<img src="./images/시스템 아키텍쳐.png" width="100%"/>
 <br><br><br>
 
 ## 📜요구사항 명세서
