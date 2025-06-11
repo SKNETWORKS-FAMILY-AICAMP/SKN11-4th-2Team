@@ -47,10 +47,10 @@
 | 카테고리 | 기술 스택 |
 |:---------:|:-----------:|
 | 사용 언어 | <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white" height="20"/> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white" height="20"/> |
-| 프레임 워크 | <img src="https://img.shields.io/badge/django-092E20?style=for-the-badge&logo=django&logoColor=white" height="20"/> <img src="https://img.shields.io/badge/fastapi-009688?style=for-the-badge&logo=next.js&logoColor=white" height="20"/> |
+| 백엔드 프레임 워크 | <img src="https://img.shields.io/badge/django-092E20?style=for-the-badge&logo=django&logoColor=white" height="20"/> <img src="https://img.shields.io/badge/fastapi-009688?style=for-the-badge&logo=next.js&logoColor=white" height="20"/> |
 | Database | <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=next.js&logoColor=white" height="20"/> |
 | LLM 모델 | <img src="https://img.shields.io/badge/exaone-A50034?style=for-the-badge&logo=lg&logoColor=white" height="20"/> |
-| UI | <img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" height="20"/>
+| 프론트엔드  | <img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" height="20"/>
 
 <br><br>
 
@@ -108,5 +108,5 @@
 |---------|------------|
 |**김형주**| Fast API와 AWS 등 처음 사용해보는 프레임워크가 많아서 걱정이 많았지만 생각보다 어렵지 않아서 다행이었다. |
 |**신준희**| 이번 프로젝트를 통해 langchain 활용해서 RAG 챗봇 구현해봤고,  vectorDB도 chromaDB랑 Faiss 연동해서 두 가지 버전으로 구현하면서 langchain과 챗봇, agent와 구현에 대해 더 많이 이해하는 시간이었다. |
-|**이현대**| - |
+|**이현대**| Django를 오랜만에 다뤄 봐서 웹소캣 통신 구현과 fast-api로 모델 응답을 처리하는 서버를 구현 하고 배포하는 전체적인 경험이 의미 있었습니다. |
 |**이현민**| Django로 REST API를 직접 설계하며 백엔드의 구조와 데이터 흐름을 체계적으로 이해하는데 많은 도움 되었으며 실제 모델링부터 인증, 예외 처리까지 전 과정을 경험하며 실무 감각을 쌓을 수 있었고, 문서화와 협업의 중요성도 크게 느꼈습니다. |
