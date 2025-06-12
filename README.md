@@ -100,16 +100,23 @@
 
 
 <br>
-
-## 테스트 케이스 결과
+## 테스트 케이스
 
 #### Case 1: 로그인 케이스
-- 입력값: 로그인 페이지에서 구글 계정 연동
+- 입력값: 로그인 페이지에서 구글, 네이버 계정 연동
 - 예상 결과: 사용자 계정으로 로그인 된 메인 페이지로 이동
 - 실제 결과: ✅ 성공
+<img src="./images/로그인 화면.png" width="100%"/>
+<img src="./images/로그인 화면 1.png" width="100%"/>
+<img src="./images/로그인 화면 2.png" width="100%"/>
 
-<img src="![image](https://github.com/user-attachments/assets/7a14ba2e-b98a-49fe-85f2-aeb6696d08ee)
-" width="100%"/>
+#### Case 2: 채팅 케이스
+- 입력값: 챗봇의 응답을 잘 받아오는가?
+- 예상 결과: 질문을 하면 챗봇이 응답
+- 실제 결과: ✅ 성공
+<img src="./images/파인 챗봇.png" width="100%"/>
+<img src="./images/api 챗봇.png" width="100%"/>
+<img src="./images/벡터 챗봇.png" width="100%"/>
 
 ## 프로젝트 회고
 
