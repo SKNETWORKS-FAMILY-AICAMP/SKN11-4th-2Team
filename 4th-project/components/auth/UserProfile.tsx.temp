@@ -1,0 +1,59 @@
+// components/auth/UserProfile.tsx
+'use client';
+
+import { useJWTAuth } from '../../hooks/use-jwt-auth';
+
+export const UserProfile: React.FC = () => {
+  const { user, logout, isLoading } = useJWTAuth();
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
+
+  if (!user) {
+    return <div>사용자 정보를 불러올 수 없습니다.</div>;
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('로그아웃 오류:', error);
+    }
+  };
+
+  return (
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="flex items-center space-x-4 mb-4">
+        {user.profile_image && (
+          <img
+            src={user.profile_image}
+            alt="프로필 이미지"
+            className="w-16 h-16 rounded-full object-cover"
+          />
+        )}
+        <div>
+          <h2 className="text-xl font-semibold text-gray-800">{user.name}</h2>
+          <p className="text-gray-600">{user.email}</p>
+        </div>
+      </div>
+
+      <div className="space-y-2 text-sm text-gray-600">
+        <p><span className="font-medium">인증 제공자:</span> {user.auth_provider || 'N/A'}</p>
+        <p><span className="font-medium">관리자 권한:</span> {user.is_staff ? '예' : '아니오'}</p>
+        <p><span className="font-medium">가입일:</span> {new Date(user.date_joined).toLocaleDateString()}</p>
+        {user.last_login && (
+          <p><span className="font-medium">마지막 로그인:</span> {new Date(user.last_login).toLocaleDateString()}</p>
+        )}
+      </div>
+
+      <button
+        onClick={handleLogout}
+        className="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+      >
+        로그아웃
+      </button>
+    </div>
+  );
+};

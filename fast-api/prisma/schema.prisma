@@ -1,0 +1,432 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "mysql" 
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String    @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  email            String    @unique
+  name             String    @db.VarChar(100)
+  profileImage     String?   @map("profile_image")
+  authProvider     AuthProvider @map("auth_provider")
+  authProviderId   String?   @map("auth_provider_id") @db.VarChar(255)
+  lastLogin        DateTime? @map("last_login")
+  dateJoined       DateTime  @default(now()) @map("date_joined")
+  isActive         Boolean   @default(true) @map("is_active")
+  isStaff          Boolean   @default(false) @map("is_staff")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+
+  children         UserChild[]
+  sessions         Session[]
+  searchLogs       SearchLog[]
+  chatSessions     ChatSession[]
+  posts            Post[]
+  comments         Comment[]
+  likes            Like[]
+  uploadedFiles    UploadedFile[]
+  developmentRecords DevelopmentRecord[]
+
+  @@map("users")
+  @@index([email])
+  @@index([isActive], map: "users_is_active_idx")
+}
+
+enum AuthProvider {
+  google
+  kakao
+  naver
+}
+
+model UserChild {
+  id        String    @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  userId    String    @map("user_id") @db.VarChar(36)
+  name      String    @db.VarChar(100)
+  birthDate DateTime  @map("birth_date") @db.Date
+  gender    Gender?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  developmentRecords DevelopmentRecord[]
+  achievedMilestones ChildMilestone[]
+
+  @@map("user_children")
+  @@index([userId], map: "user_children_user_id_idx")
+}
+
+enum Gender {
+  male
+  female
+  other
+}
+
+model Session {
+  id         String    @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  userId     String    @map("user_id") @db.VarChar(36)
+  token      String    @db.VarChar(500)
+  deviceInfo Json?     @map("device_info")
+  ipAddress  String?   @map("ip_address")
+  expiresAt  DateTime  @map("expires_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+  @@index([userId], map: "sessions_user_id_idx")
+  @@index([expiresAt], map: "sessions_expires_at_idx")
+}
+
+model SearchLog {
+  id           String     @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  userId       String?    @map("user_id") @db.VarChar(36)
+  query        String     @db.VarChar(255)
+  searchType   SearchType @default(all) @map("search_type")
+  resultsCount Int        @default(0) @map("results_count")
+  ipAddress    String?    @map("ip_address")
+  userAgent    String?    @map("user_agent")
+  createdAt    DateTime   @default(now()) @map("created_at")
+
+  user         User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("search_logs")
+  @@index([userId], map: "search_logs_user_id_idx")
+  @@index([createdAt], map: "search_logs_created_at_idx")
+}
+
+enum SearchType {
+  all
+  posts
+  milestones
+  records
+}
+
+model ChatSession {
+  id              String      @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  userId          String      @map("user_id") @db.VarChar(36)
+  title           String      @db.VarChar(200)
+  category        ChatCategory
+  sessionToken    String?     @map("session_token") @db.VarChar(255)
+  totalTokens     Int         @default(0) @map("total_tokens")
+  status          SessionStatus @default(active)
+  lastMessageAt   DateTime?   @map("last_message_at")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  deletedAt       DateTime?   @map("deleted_at")
+
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages        ChatMessage[]
+
+  @@map("chat_sessions")
+  @@index([userId], map: "chat_sessions_user_id_idx")
+  @@index([status], map: "chat_sessions_status_idx")
+}
+
+enum ChatCategory {
+  general
+  development
+  health
+  behavior
+  nutrition
+  education
+  sleep
+  emergency
+}
+
+enum SessionStatus {
+  active
+  completed
+  expired
+}
+
+model ChatMessage {
+  id        String    @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  sessionId String    @map("session_id") @db.VarChar(36)
+  role      MessageRole
+  content   String    @db.Text
+  tokens    Int       @default(0)
+  metadata  Json?
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("chat_messages")
+  @@index([sessionId], map: "chat_messages_session_id_idx")
+  @@index([createdAt], map: "chat_messages_created_at_idx")
+}
+
+enum MessageRole {
+  user
+  assistant
+  system
+}
+
+model Category {
+  id           String   @id @default(cuid())
+  name         String   @db.VarChar(100)
+  description  String?  @db.Text
+  postType     PostType @map("post_type")
+  color        String?  @db.VarChar(7)
+  icon         String?  @db.VarChar(50)
+  displayOrder Int      @default(0) @map("display_order")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  posts        Post[]
+
+  @@map("categories")
+  @@index([postType], map: "categories_post_type_idx")
+}
+
+enum PostType {
+  question
+  story
+  tip
+}
+
+model Post {
+  id           String     @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  userId       String     @map("user_id") @db.VarChar(36)
+  categoryId   String     @map("category_id")
+  postType     PostType   @map("post_type")
+  title        String     @db.VarChar(200)
+  content      String     @db.Text
+  status       PostStatus @default(published)
+  viewCount    Int        @default(0) @map("view_count")
+  likeCount    Int        @default(0) @map("like_count")
+  commentCount Int        @default(0) @map("comment_count")
+  isAnonymous  Boolean    @default(false) @map("is_anonymous")
+  isSolved     Boolean?   @map("is_solved")
+  isPinned     Boolean    @default(false) @map("is_pinned")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  deletedAt    DateTime?  @map("deleted_at")
+
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category     Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  comments     Comment[]
+  images       PostImage[]
+  likes        Like[]
+
+  @@map("posts")
+  @@index([categoryId], map: "posts_category_id_idx")
+  @@index([userId], map: "posts_user_id_idx")
+  @@index([postType], map: "posts_post_type_idx")
+  @@index([status], map: "posts_status_idx")
+  @@index([createdAt], map: "posts_created_at_idx")
+  @@index([isPinned], map: "posts_is_pinned_idx")
+}
+
+enum PostStatus {
+  draft
+  published
+  hidden
+}
+
+model Comment {
+  id          String    @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  userId      String    @map("user_id") @db.VarChar(36)
+  postId      String    @map("post_id") @db.VarChar(36)
+  content     String    @db.Text
+  likeCount   Int       @default(0) @map("like_count")
+  isAnonymous Boolean   @default(false) @map("is_anonymous")
+  parentId    String?   @map("parent_id") @db.VarChar(36)
+  depth       Int       @default(0)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parent      Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies     Comment[] @relation("CommentReplies")
+  likes       Like[]
+
+  @@map("comments")
+  @@index([postId], map: "comments_post_id_idx")
+  @@index([userId], map: "comments_user_id_idx")
+  @@index([parentId], map: "comments_parent_id_idx")
+}
+
+model PostImage {
+  id        String    @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  postId    String    @map("post_id") @db.VarChar(36)
+  imageUrl  String    @map("image_url")
+  altText   String?   @map("alt_text") @db.VarChar(255)
+  order     Int       @default(0)
+  createdAt DateTime  @default(now()) @map("created_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("post_images")
+}
+
+model Like {
+  id         String     @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  userId     String     @map("user_id") @db.VarChar(36)
+  targetId   String     @map("target_id") @db.VarChar(36)
+  targetType TargetType @map("target_type")
+  createdAt  DateTime   @default(now()) @map("created_at")
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post       Post?      @relation(fields: [targetId], references: [id], onDelete: Cascade, map: "likes_post_id_fkey")
+  comment    Comment?   @relation(fields: [targetId], references: [id], onDelete: Cascade, map: "likes_comment_id_fkey")
+
+  @@unique([userId, targetId, targetType])
+  @@map("likes")
+  @@index([targetId, targetType], map: "likes_target_idx")
+  @@index([userId, targetId, targetType], map: "likes_user_target_idx")
+}
+
+enum TargetType {
+  post
+  comment
+}
+
+model UploadedFile {
+  id           String       @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  userId       String       @map("user_id") @db.VarChar(36)
+  file         String      
+  originalName String       @map("original_name") @db.VarChar(255)
+  fileType     FileType     @default(other) @map("file_type")
+  fileSize     BigInt       @map("file_size")
+  uploadedAt   DateTime     @default(now()) @map("uploaded_at")
+  isPublic     Boolean      @default(false) @map("is_public")
+  description  String?      @db.Text
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  imageUpload  ImageUpload?
+
+  @@map("uploaded_files")
+}
+
+enum FileType {
+  image
+  document
+  other
+}
+
+model ImageUpload {
+  id             String       @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  uploadedFileId String       @unique @map("uploaded_file_id") @db.VarChar(36)
+  thumbnail      String?      
+  width          Int?
+  height         Int?
+
+  uploadedFile   UploadedFile @relation(fields: [uploadedFileId], references: [id], onDelete: Cascade)
+
+  @@map("image_uploads")
+}
+
+model DevelopmentRecord {
+  id              String            @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  userId          String            @map("user_id") @db.VarChar(36)
+  childId         String            @map("child_id") @db.VarChar(36)
+  date            DateTime          @db.Date
+  ageGroup        AgeGroup          @map("age_group")
+  developmentArea DevelopmentArea?  @map("development_area")
+  title           String            @db.VarChar(200)
+  description     String            @db.Text
+  recordType      RecordType        @default(development_record) @map("record_type")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  deletedAt       DateTime?         @map("deleted_at")
+
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  child           UserChild         @relation(fields: [childId], references: [id], onDelete: Cascade)
+  images          DevelopmentRecordImage[]
+
+  @@map("development_records")
+  @@index([userId], map: "development_records_user_id_idx")
+  @@index([childId], map: "development_records_child_id_idx")
+  @@index([date], map: "development_records_date_idx")
+}
+
+enum AgeGroup {
+  months_0_3   @map("0-3months")
+  months_3_6   @map("3-6months")
+  months_6_9   @map("6-9months")
+  months_9_12  @map("9-12months")
+  months_12_18 @map("12-18months")
+  months_18_24 @map("18-24months")
+  months_24_36 @map("24-36months")
+  months_36_48 @map("36-48months")
+  months_48_60 @map("48-60months")
+  months_60_plus @map("60months+")
+}
+
+enum DevelopmentArea {
+  physical
+  cognitive
+  language
+  social
+  emotional
+  self_care
+}
+
+enum RecordType {
+  development_record
+  milestone_achievement
+  observation
+  concern
+}
+
+model DevelopmentRecordImage {
+  id        String            @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  recordId  String            @map("record_id") @db.VarChar(36)
+  imageUrl  String            @map("image_url")
+  order     Int               @default(0)
+  createdAt DateTime          @default(now()) @map("created_at")
+  deletedAt DateTime?         @map("deleted_at")
+
+  record    DevelopmentRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+
+  @@map("development_record_images")
+}
+
+model DevelopmentMilestone {
+  id              String            @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  ageGroup        AgeGroup          @map("age_group")
+  developmentArea DevelopmentArea   @map("development_area")
+  title           String            @db.VarChar(200)
+  description     String            @db.Text
+  order           Int               @default(0)
+  isActive        Boolean           @default(true) @map("is_active")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  childAchievements ChildMilestone[]
+
+  @@map("development_milestones")
+}
+
+model ChildMilestone {
+  id            String             @id @default(dbgenerated("UUID()")) @db.VarChar(36)
+  childId       String             @map("child_id") @db.VarChar(36)
+  milestoneId   String             @map("milestone_id") @db.VarChar(36)
+  achievedDate  DateTime           @map("achieved_date") @db.Date
+  notes         String?            @db.Text
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+
+  child         UserChild          @relation(fields: [childId], references: [id], onDelete: Cascade)
+  milestone     DevelopmentMilestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+
+  @@unique([childId, milestoneId])
+  @@map("child_milestones")
+}
