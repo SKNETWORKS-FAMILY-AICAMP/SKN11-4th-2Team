@@ -60,7 +60,7 @@
 <br><br><br>
 
 ## 📜요구사항 명세서
-<img src="./images/요구사항 명세서.png" width="100%"/>
+<img src="./images/요구사항 명세서_수정본.png" width="100%"/>
 <br><br><br>
 
 
